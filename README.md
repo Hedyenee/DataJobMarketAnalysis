@@ -26,3 +26,8 @@ IRkernel::installspec()  # rend le kernel R disponible dans Jupyter
 ## Organisation des sorties
 - Figures : enregistrer les plots dans `figures/` (ex. dans R `png("figures/top_jobs.png", width=1200, height=800); ...; dev.off()`).
 - Rapports : exporter le notebook en HTML/PDF dans `report/` (ex. `jupyter nbconvert --execute --to html notebooks/01_exploration.ipynb --output report/report.html`).
+
+### Ouvrir le rapport HTML généré
+- Double-clic sur `report/analysis.html`, ou bien :
+  - PowerShell : `start report\\analysis.html`
+  - Git Bash : `explorer.exe report/analysis.html`
