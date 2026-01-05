@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Analyse du marché de l’emploi dans la Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="analysis_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="analysis_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="analysis_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="analysis_files/libs/bootstrap/bootstrap-4d7f0bce1131f3e5f9547cd857cfbfc8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#analyse-du-marché-de-lemploi-dans-la-data" id="toc-analyse-du-marché-de-lemploi-dans-la-data" class="nav-link active" data-scroll-target="#analyse-du-marché-de-lemploi-dans-la-data"><span class="header-section-number">1</span> Analyse du marché de l’emploi dans la Data</a>
+  <ul class="collapse">
+  <li><a href="#aperçu-général-des-datasets" id="toc-aperçu-général-des-datasets" class="nav-link" data-scroll-target="#aperçu-général-des-datasets"><span class="header-section-number">1.1</span> Aperçu général des datasets</a></li>
+  <li><a href="#interprétation-de-la-structure-des-données" id="toc-interprétation-de-la-structure-des-données" class="nav-link" data-scroll-target="#interprétation-de-la-structure-des-données"><span class="header-section-number">1.2</span> Interprétation de la structure des données</a></li>
+  <li><a href="#analyse-des-valeurs-manquantes" id="toc-analyse-des-valeurs-manquantes" class="nav-link" data-scroll-target="#analyse-des-valeurs-manquantes"><span class="header-section-number">1.3</span> Analyse des valeurs manquantes</a></li>
+  <li><a href="#analyse-des-métiers-les-plus-demandés" id="toc-analyse-des-métiers-les-plus-demandés" class="nav-link" data-scroll-target="#analyse-des-métiers-les-plus-demandés"><span class="header-section-number">1.4</span> Analyse des métiers les plus demandés</a></li>
+  <li><a href="#analyse-des-métiers-les-plus-demandés-1" id="toc-analyse-des-métiers-les-plus-demandés-1" class="nav-link" data-scroll-target="#analyse-des-métiers-les-plus-demandés-1"><span class="header-section-number">1.5</span> Analyse des métiers les plus demandés</a></li>
+  <li><a href="#répartition-géographique-des-offres-demploi-par-pays" id="toc-répartition-géographique-des-offres-demploi-par-pays" class="nav-link" data-scroll-target="#répartition-géographique-des-offres-demploi-par-pays"><span class="header-section-number">1.6</span> Répartition géographique des offres d’emploi (par pays)</a></li>
+  <li><a href="#répartition-géographique-des-offres-demploi-par-pays-1" id="toc-répartition-géographique-des-offres-demploi-par-pays-1" class="nav-link" data-scroll-target="#répartition-géographique-des-offres-demploi-par-pays-1"><span class="header-section-number">1.7</span> Répartition géographique des offres d’emploi (par pays)</a></li>
+  <li><a href="#répartition-des-offres-par-type-de-poste" id="toc-répartition-des-offres-par-type-de-poste" class="nav-link" data-scroll-target="#répartition-des-offres-par-type-de-poste"><span class="header-section-number">1.8</span> Répartition des offres par type de poste</a></li>
+  <li><a href="#analyse-et-interprétation-des-résultats-type-de-poste" id="toc-analyse-et-interprétation-des-résultats-type-de-poste" class="nav-link" data-scroll-target="#analyse-et-interprétation-des-résultats-type-de-poste"><span class="header-section-number">1.9</span> Analyse et interprétation des résultats — Type de poste</a></li>
+  <li><a href="#répartition-des-offres-selon-le-niveau-des-postes" id="toc-répartition-des-offres-selon-le-niveau-des-postes" class="nav-link" data-scroll-target="#répartition-des-offres-selon-le-niveau-des-postes"><span class="header-section-number">1.10</span> Répartition des offres selon le niveau des postes</a></li>
+  <li><a href="#analyse-et-interprétation-des-résultats-niveau-des-postes" id="toc-analyse-et-interprétation-des-résultats-niveau-des-postes" class="nav-link" data-scroll-target="#analyse-et-interprétation-des-résultats-niveau-des-postes"><span class="header-section-number">1.11</span> Analyse et interprétation des résultats — Niveau des postes</a></li>
+  <li><a href="#analyse-des-compétences-les-plus-demandées" id="toc-analyse-des-compétences-les-plus-demandées" class="nav-link" data-scroll-target="#analyse-des-compétences-les-plus-demandées"><span class="header-section-number">1.12</span> Analyse des compétences les plus demandées</a></li>
+  <li><a href="#analyse-et-interprétation-des-résultats-compétences-les-plus-demandées" id="toc-analyse-et-interprétation-des-résultats-compétences-les-plus-demandées" class="nav-link" data-scroll-target="#analyse-et-interprétation-des-résultats-compétences-les-plus-demandées"><span class="header-section-number">1.13</span> Analyse et interprétation des résultats — Compétences les plus demandées</a></li>
+  <li><a href="#analyse-croisée-des-compétences-par-métier" id="toc-analyse-croisée-des-compétences-par-métier" class="nav-link" data-scroll-target="#analyse-croisée-des-compétences-par-métier"><span class="header-section-number">1.14</span> Analyse croisée des compétences par métier</a></li>
+  <li><a href="#analyse-croisée-des-compétences-par-métier-1" id="toc-analyse-croisée-des-compétences-par-métier-1" class="nav-link" data-scroll-target="#analyse-croisée-des-compétences-par-métier-1"><span class="header-section-number">1.15</span> Analyse croisée des compétences par métier</a></li>
+  <li><a href="#visualisation-des-résultats" id="toc-visualisation-des-résultats" class="nav-link" data-scroll-target="#visualisation-des-résultats"><span class="header-section-number">1.16</span> Visualisation des résultats</a></li>
+  <li><a href="#synthèse-chiffrée-du-marché-key-insights" id="toc-synthèse-chiffrée-du-marché-key-insights" class="nav-link" data-scroll-target="#synthèse-chiffrée-du-marché-key-insights"><span class="header-section-number">1.17</span> Synthèse chiffrée du marché (Key Insights)</a></li>
+  <li><a href="#interprétation-de-la-synthèse-chiffrée" id="toc-interprétation-de-la-synthèse-chiffrée" class="nav-link" data-scroll-target="#interprétation-de-la-synthèse-chiffrée"><span class="header-section-number">1.18</span> Interprétation de la synthèse chiffrée</a></li>
+  <li><a href="#conclusion-générale" id="toc-conclusion-générale" class="nav-link" data-scroll-target="#conclusion-générale"><span class="header-section-number">1.19</span> Conclusion générale</a></li>
+  <li><a href="#limites-du-projet-et-perspectives-damélioration" id="toc-limites-du-projet-et-perspectives-damélioration" class="nav-link" data-scroll-target="#limites-du-projet-et-perspectives-damélioration"><span class="header-section-number">1.20</span> Limites du projet et perspectives d’amélioration</a>
+  <ul class="collapse">
+  <li><a href="#perspectives-damélioration" id="toc-perspectives-damélioration" class="nav-link" data-scroll-target="#perspectives-damélioration"><span class="header-section-number">1.20.1</span> Perspectives d’amélioration</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Analyse du marché de l’emploi dans la Data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="analyse-du-marché-de-lemploi-dans-la-data" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Analyse du marché de l’emploi dans la Data</h1>
+<p>Ce projet vise à analyser le marché de l’emploi dans le domaine de la Data (Data Science, Data Analysis, Intelligence Artificielle) à partir d’offres d’emploi réelles.</p>
+<p>L’analyse repose sur trois datasets : - job_postings.csv : informations générales sur les offres d’emploi - job_skills.csv : compétences associées à chaque offre - job_summary.csv : informations et indicateurs synthétiques</p>
+<p>L’objectif est d’identifier les métiers les plus demandés, les compétences clés et de comprendre les tendances générales du marché.</p>
+<p>Ce notebook correspond à la phase d’exploration des données.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data_dir <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">dir.exists</span>(<span class="st">'../data/raw'</span>)) <span class="st">'../data/raw'</span> <span class="cf">else</span> <span class="st">'data/raw'</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(data_dir)) <span class="fu">stop</span>(<span class="st">'data/raw folder not found'</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">job_postings =</span> <span class="st">'job_postings.csv'</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">job_skills   =</span> <span class="st">'job_skills.csv'</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">job_summary  =</span> <span class="st">'job_summary.csv'</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>read_safe <span class="ot">&lt;-</span> <span class="cf">function</span>(fname) {</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(data_dir, fname)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(path)) <span class="fu">stop</span>(<span class="fu">paste</span>(<span class="st">'Missing file:'</span>, path))</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read.csv</span>(path, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">list2env</span>(<span class="fu">lapply</span>(files, read_safe), <span class="at">envir =</span> .GlobalEnv)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
+<section id="aperçu-général-des-datasets" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="aperçu-général-des-datasets"><span class="header-section-number">1.1</span> Aperçu général des datasets</h2>
+<p>Cette étape permet d’avoir une première vue d’ensemble sur les données : - Nombre de lignes et de colonnes - Noms des variables - Structure générale des datasets</p>
+<p>Cela aide à comprendre le contenu des fichiers avant d’aller plus loin dans l’analyse.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions des datasets</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(job_postings)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(job_skills)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(job_summary)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Noms des colonnes</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(job_postings)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(job_skills)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(job_summary)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Structure des données</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(job_postings)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(job_skills)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(job_summary)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<ol class="list-inline">
+<li>
+12217
+</li>
+<li>
+15
+</li>
+</ol>
+<ol class="list-inline">
+<li>
+12217
+</li>
+<li>
+2
+</li>
+</ol>
+<ol class="list-inline">
+<li>
+12217
+</li>
+<li>
+2
+</li>
+</ol>
+<ol class="list-inline">
+<li>
+‘job_link’
+</li>
+<li>
+‘last_processed_time’
+</li>
+<li>
+‘last_status’
+</li>
+<li>
+‘got_summary’
+</li>
+<li>
+‘got_ner’
+</li>
+<li>
+‘is_being_worked’
+</li>
+<li>
+‘job_title’
+</li>
+<li>
+‘company’
+</li>
+<li>
+‘job_location’
+</li>
+<li>
+‘first_seen’
+</li>
+<li>
+‘search_city’
+</li>
+<li>
+‘search_country’
+</li>
+<li>
+‘search_position’
+</li>
+<li>
+‘job_level’
+</li>
+<li>
+‘job_type’
+</li>
+</ol>
+<ol class="list-inline">
+<li>
+‘job_link’
+</li>
+<li>
+‘job_skills’
+</li>
+</ol>
+<ol class="list-inline">
+<li>
+‘job_link’
+</li>
+<li>
+‘job_summary’
+</li>
+</ol>
+<pre><code>'data.frame':   12217 obs. of  15 variables:
+ $ job_link           : chr  "https://www.linkedin.com/jobs/view/senior-machine-learning-engineer-at-jobs-for-humanity-3804053819" "https://www.linkedin.com/jobs/view/principal-software-engineer-ml-accelerators-at-aurora-3703455068" "https://www.linkedin.com/jobs/view/senior-etl-data-warehouse-specialist-at-adame-services-llc-3765023888" "https://www.linkedin.com/jobs/view/senior-data-warehouse-developer-architect-at-morph-enterprise-3794602483" ...
+ $ last_processed_time: chr  "2024-01-21 08:08:48.031964+00" "2024-01-20 04:02:12.331406+00" "2024-01-21 08:08:31.941595+00" "2024-01-20 15:30:55.796572+00" ...
+ $ last_status        : chr  "Finished NER" "Finished NER" "Finished NER" "Finished NER" ...
+ $ got_summary        : chr  "t" "t" "t" "t" ...
+ $ got_ner            : chr  "t" "t" "t" "t" ...
+ $ is_being_worked    : chr  "f" "f" "f" "f" ...
+ $ job_title          : chr  "Senior Machine Learning Engineer" "Principal Software Engineer, ML Accelerators" "Senior ETL Data Warehouse Specialist" "Senior Data Warehouse Developer / Architect" ...
+ $ company            : chr  "Jobs for Humanity" "Aurora" "Adame Services LLC" "Morph Enterprise" ...
+ $ job_location       : chr  "New Haven, CT" "San Francisco, CA" "New York, NY" "Harrisburg, PA" ...
+ $ first_seen         : chr  "2024-01-14" "2024-01-14" "2024-01-14" "2024-01-12" ...
+ $ search_city        : chr  "East Haven" "El Cerrito" "Middletown" "Lebanon" ...
+ $ search_country     : chr  "United States" "United States" "United States" "United States" ...
+ $ search_position    : chr  "Agricultural-Research Engineer" "Set-Key Driver" "Technical Support Specialist" "Architect" ...
+ $ job_level          : chr  "Mid senior" "Mid senior" "Associate" "Mid senior" ...
+ $ job_type           : chr  "Onsite" "Onsite" "Onsite" "Onsite" ...
+'data.frame':   12217 obs. of  2 variables:
+ $ job_link  : chr  "https://www.linkedin.com/jobs/view/senior-machine-learning-engineer-at-jobs-for-humanity-3804053819" "https://www.linkedin.com/jobs/view/principal-software-engineer-ml-accelerators-at-aurora-3703455068" "https://www.linkedin.com/jobs/view/senior-etl-data-warehouse-specialist-at-adame-services-llc-3765023888" "https://www.linkedin.com/jobs/view/senior-data-warehouse-developer-architect-at-morph-enterprise-3794602483" ...
+ $ job_skills: chr  "Machine Learning, Programming, Python, Scala, Java, Data Engineering, Distributed Computing, Statistical Modeli"| __truncated__ "C++, Python, PyTorch, TensorFlow, MXNet, CUDA, OpenCL, OpenVX, Halide, SIMD programming models, MLspecific acce"| __truncated__ "ETL, Data Integration, Data Transformation, Data Warehousing, Business Intelligence, Data Modeling, Data Archit"| __truncated__ "Data Lakes, Data Bricks, Azure Data Factory Pipelines, Spark, Python, Business Intelligence, Data Warehouse, SQ"| __truncated__ ...
+'data.frame':   12217 obs. of  2 variables:
+ $ job_link   : chr  "https://www.linkedin.com/jobs/view/senior-machine-learning-engineer-at-jobs-for-humanity-3804053819" "https://www.linkedin.com/jobs/view/principal-software-engineer-ml-accelerators-at-aurora-3703455068" "https://www.linkedin.com/jobs/view/senior-etl-data-warehouse-specialist-at-adame-services-llc-3765023888" "https://www.linkedin.com/jobs/view/senior-data-warehouse-developer-architect-at-morph-enterprise-3794602483" ...
+ $ job_summary: chr  "Company Description\nJobs for Humanity is partnering with Capital One to build an inclusive and just employment"| __truncated__ "Who We Are\nAurora (Nasdaq: AUR) is delivering the benefits of self-driving technology safely, quickly, and bro"| __truncated__ "Location: New York City, NY\nPosition Summary\nOur company is seeking a highly skilled and experienced Senior E"| __truncated__ "Responsibilities:\nCandidate must have significant, hands-on technical experience and expertise with data lakes"| __truncated__ ...</code></pre>
+</section>
+<section id="interprétation-de-la-structure-des-données" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="interprétation-de-la-structure-des-données"><span class="header-section-number">1.2</span> Interprétation de la structure des données</h2>
+<p>Les trois datasets contiennent le même nombre d’observations (12 217 lignes), ce qui indique qu’ils décrivent les mêmes offres d’emploi.</p>
+<ul>
+<li>Le dataset <strong>job_postings</strong> contient les informations principales sur les offres (poste, entreprise, localisation, type de poste, niveau, etc.).</li>
+<li>Le dataset <strong>job_skills</strong> associe à chaque offre une liste de compétences techniques sous forme de texte.</li>
+<li>Le dataset <strong>job_summary</strong> contient une description textuelle détaillée des offres d’emploi.</li>
+</ul>
+<p>Les datasets sont reliés entre eux par la variable commune <strong>job_link</strong>, qui servira de clé pour les jointures dans les étapes suivantes.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aperçu des premières lignes</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(job_postings, <span class="dv">2</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(job_skills, <span class="dv">2</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(job_summary, <span class="dv">1</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification des valeurs manquantes (NA)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(job_postings))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(job_skills))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(job_summary))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<table>
+<thead>
+<tr>
+<th scope="col">
+job_link
+</th>
+<th scope="col">
+last_processed_time
+</th>
+<th scope="col">
+last_status
+</th>
+<th scope="col">
+got_summary
+</th>
+<th scope="col">
+got_ner
+</th>
+<th scope="col">
+is_being_worked
+</th>
+<th scope="col">
+job_title
+</th>
+<th scope="col">
+company
+</th>
+<th scope="col">
+job_location
+</th>
+<th scope="col">
+first_seen
+</th>
+<th scope="col">
+search_city
+</th>
+<th scope="col">
+search_country
+</th>
+<th scope="col">
+search_position
+</th>
+<th scope="col">
+job_level
+</th>
+<th scope="col">
+job_type
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+https://www.linkedin.com/jobs/view/senior-machine-learning-engineer-at-jobs-for-humanity-3804053819
+</td>
+<td>
+2024-01-21 08:08:48.031964+00
+</td>
+<td>
+Finished NER
+</td>
+<td>
+t
+</td>
+<td>
+t
+</td>
+<td>
+f
+</td>
+<td>
+Senior Machine Learning Engineer
+</td>
+<td>
+Jobs for Humanity
+</td>
+<td>
+New Haven, CT
+</td>
+<td>
+2024-01-14
+</td>
+<td>
+East Haven
+</td>
+<td>
+United States
+</td>
+<td>
+Agricultural-Research Engineer
+</td>
+<td>
+Mid senior
+</td>
+<td>
+Onsite
+</td>
+</tr>
+<tr>
+<td>
+https://www.linkedin.com/jobs/view/principal-software-engineer-ml-accelerators-at-aurora-3703455068
+</td>
+<td>
+2024-01-20 04:02:12.331406+00
+</td>
+<td>
+Finished NER
+</td>
+<td>
+t
+</td>
+<td>
+t
+</td>
+<td>
+f
+</td>
+<td>
+Principal Software Engineer, ML Accelerators
+</td>
+<td>
+Aurora
+</td>
+<td>
+San Francisco, CA
+</td>
+<td>
+2024-01-14
+</td>
+<td>
+El Cerrito
+</td>
+<td>
+United States
+</td>
+<td>
+Set-Key Driver
+</td>
+<td>
+Mid senior
+</td>
+<td>
+Onsite
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th scope="col">
+job_link
+</th>
+<th scope="col">
+job_skills
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+https://www.linkedin.com/jobs/view/senior-machine-learning-engineer-at-jobs-for-humanity-3804053819
+</td>
+<td>
+Machine Learning, Programming, Python, Scala, Java, Data Engineering, Distributed Computing, Statistical Modeling, Optimization, Data Pipelines, Cloud Computing, DevOps, Software Development, Data Gathering, Data Preparation, Data Visualization, Machine Learning Frameworks, scikitlearn, PyTorch, Dask, Spark, TensorFlow, Distributed File Systems, Multi node Database Paradigms, Open Source ML Software, Responsible AI, Explainable AI
+</td>
+</tr>
+<tr>
+<td>
+https://www.linkedin.com/jobs/view/principal-software-engineer-ml-accelerators-at-aurora-3703455068
+</td>
+<td>
+C++, Python, PyTorch, TensorFlow, MXNet, CUDA, OpenCL, OpenVX, Halide, SIMD programming models, MLspecific accelerators, Linux/unix environments, Deep learning frameworks, Computer vision deep learning models, ML software and hardware technology, Inference on edge platforms, Cloud ML training pipelines, HPC experience, Performance troubleshooting, Profiling, Roofline model, Analytical skills, Communication skills
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th scope="col">
+job_link
+</th>
+<th scope="col">
+job_summary
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+https://www.linkedin.com/jobs/view/senior-machine-learning-engineer-at-jobs-for-humanity-3804053819
+</td>
+<td>
+Company Description Jobs for Humanity is partnering with Capital One to build an inclusive and just employment ecosystem. Therefore, we prioritize individuals coming from the following communities: Refugee, Neurodivergent, Single Parent, Blind or Low Vision, Deaf or Hard of Hearing, Black, Hispanic, Asian, Military Veterans, the Elderly, the LGBTQ, and Justice Impacted individuals. This position is open to candidates who reside in and have the legal right to work in the country where the job is located. Company Name: Capital One Job Description Locations: NY - New York, United States of America, New York, New York Senior Machine Learning Engineer Senior Machine Learning Engineer As a Capital One Machine Learning Engineer (MLE), you’ll be part of an Agile team dedicated to productionizing machine learning applications and systems at scale. Youâ€™ll participate in the detailed technical design, development, and implementation of machine learning applications using existing and emerging technology platforms. Youâ€™ll focus on machine learning architectural design, develop and review model and application code, and ensure high availability and performance of our machine learning applications. You’ll have the opportunity to continuously learn and apply the latest innovations and best practices in machine learning engineering. What youâ€™ll do in the role: The MLE role overlaps with many disciplines, such as Ops, Modeling, and Data Engineering. In this role, you’ll be expected to perform many ML engineering activities, including one or more of the following: Design, build, and/or deliver ML models and components that solve real-world business problems, while working in collaboration with the Product and Data Science teams. Inform your ML infrastructure decisions using your understanding of ML modeling techniques and issues, including choice of model, data, and feature selection, model training, hyperparameter tuning, dimensionality, bias/variance, and validation). Solve complex problems by writing and testing application code, developing and validating ML models, and automating tests and deployment. Collaborate as part of a cross-functional Agile team to create and enhance software that enables state-of-the-art big data and ML applications. Retrain, maintain, and monitor models in production. Leverage or build cloud-based architectures, technologies, and/or platforms to deliver optimized ML models at scale. Construct optimized data pipelines to feed ML models. Leverage continuous integration and continuous deployment best practices, including test automation and monitoring, to ensure successful deployment of ML models and application code. Ensure all code is well-managed to reduce vulnerabilities, models are well-governed from a risk perspective, and the ML follows best practices in Responsible and Explainable AI. Use programming languages like Python, Scala, or Java. Basic Qualifications: Bachelorâ€™s degree. At least 4 years of experience programming with Python, Scala, or Java (Internship experience does not apply) At least 3 years of experience designing and building data-intensive solutions using distributed computing At least 2 years of on-the-job experience with an industry recognized ML frameworks (scikit-learn, PyTorch, Dask, Spark, or TensorFlow) At least 1 year of experience productionizing, monitoring, and maintaining models Preferred Qualifications: 1+ years of experience building, scaling, and optimizing ML systems 1+ years of experience with data gathering and preparation for ML models 2+ years of experience developing performant, resilient, and maintainable code Experience developing and deploying ML solutions in a public cloud such as AWS, Azure, or Google Cloud Platform Master’s or doctoral degree in computer science, electrical engineering, mathematics, or a similar field 3+ years of experience with distributed file systems or multi-node database paradigms Contributed to open source ML software Authored/co-authored a paper on a ML technique, model, or proof of concept 3+ years of experience building production-ready data pipelines that feed ML models Experience designing, implementing, and scaling complex data pipelines for ML models and evaluating their performance At this time, Capital One will not sponsor a new applicant for employment authorization for this position. The minimum and maximum full-time annual salaries for this role are listed below, by location. Please note that this salary information is solely for candidates hired to perform work within one of these locations, and refers to the amount Capital One is willing to pay at the time of this posting. Salaries for part-time roles will be prorated based upon the agreed upon number of hours to be regularly worked. New York City (Hybrid On-Site): $161,900 - $184,800 for Senior Machine Learning Engineer Candidates hired to work in other locations will be subject to the pay range associated with that location, and the actual annualized salary amount offered to any candidate at the time of hire will be reflected solely in the candidateâ€™s offer letter. Capital One offers a comprehensive, competitive, and inclusive set of health, financial and other benefits that support your total well-being. Learn more at the Capital One Careers website. Eligibility varies based on full or part-time status, exempt or non-exempt status, and management level. This role is expected to accept applications for a minimum of 5 business days. No agencies please. Capital One is an equal opportunity employer committed to diversity and inclusion in the workplace. All qualified applicants will receive consideration for employment without regard to sex (including pregnancy, childbirth or related medical conditions), race, color, age, national origin, religion, disability, genetic information, marital status, sexual orientation, gender identity, gender reassignment, citizenship, immigration status, protected veteran status, or any other basis prohibited under applicable federal, state or local law. Capital One promotes a drug-free workplace. Capital One will consider for employment qualified applicants with a criminal history in a manner consistent with the requirements of applicable laws regarding criminal background inquiries, including, to the extent applicable, Article 23-A of the New York Correction Law; San Francisco, California Police Code Article 49, Sections 4901-4920; New York Cityâ€™s Fair Chance Act; Philadelphiaâ€™s Fair Criminal Records Screening Act; and other applicable federal, state, and local laws and regulations regarding criminal background inquiries. If you have visited our website in search of information on employment opportunities or to apply for a position, and you require an accommodation, please contact Capital One Recruiting at 1-800-304-9102 or via email at RecruitingAccommodation@capitalone.com. All information you provide will be kept confidential and will be used only to the extent required to provide needed reasonable accommodations. For technical support or questions about Capital One’s recruiting process, please send an email to Careers@capitalone.com Capital One does not provide, endorse nor guarantee and is not liable for third-party products, services, educational tools or other information available through this site. Capital One Financial is made up of several different entities. Please note that any position posted in Canada is for Capital One Canada, any position posted in the United Kingdom is for Capital One Europe and any position posted in the Philippines is for Capital One Philippines Service Corp.&nbsp;(COPSSC). Show more Show less
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="dl-horizontal">
+<dt>
+job_link
+</dt>
+<pre><code>&lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;last_processed_time&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;last_status&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;got_summary&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;got_ner&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;is_being_worked&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;job_title&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;company&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;job_location&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;first_seen&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;search_city&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;search_country&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;search_position&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;job_level&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;job_type&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;</code></pre>
+</dl>
+<dl class="dl-horizontal">
+<dt>
+job_link
+</dt>
+<pre><code>&lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;job_skills&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;</code></pre>
+</dl>
+<dl class="dl-horizontal">
+<dt>
+job_link
+</dt>
+<pre><code>&lt;dd&gt;0&lt;/dd&gt;
+&lt;dt&gt;job_summary&lt;/dt&gt;
+    &lt;dd&gt;0&lt;/dd&gt;</code></pre>
+</dl>
+</section>
+<section id="analyse-des-valeurs-manquantes" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="analyse-des-valeurs-manquantes"><span class="header-section-number">1.3</span> Analyse des valeurs manquantes</h2>
+<p>La vérification des valeurs manquantes montre que : - Aucun dataset ne contient de valeurs manquantes (NA) - Toutes les colonnes ont une valeur de 0 pour le nombre de NA</p>
+<p>Cela signifie que les données sont complètes et exploitables directement pour l’analyse exploratoire, sans suppression ou imputation de valeurs manquantes à ce stade.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification et ajustement des types de variables</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion des dates (si nécessaire)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>job_postings<span class="sc">$</span>first_seen <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(job_postings<span class="sc">$</span>first_seen)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification des types après conversion</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(job_postings<span class="sc">$</span>first_seen)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Aperçu des valeurs uniques pour certaines variables clés</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(job_postings<span class="sc">$</span>job_level)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(job_postings<span class="sc">$</span>job_type)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(job_postings<span class="sc">$</span>search_country)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code> Date[1:12217], format: "2024-01-14" "2024-01-14" "2024-01-14" "2024-01-12" "2024-01-14" ...</code></pre>
+<ol class="list-inline">
+<li>
+‘Mid senior’
+</li>
+<li>
+‘Associate’
+</li>
+</ol>
+<ol class="list-inline">
+<li>
+‘Onsite’
+</li>
+<li>
+‘Hybrid’
+</li>
+<li>
+‘Remote’
+</li>
+</ol>
+<ol class="list-inline">
+<li>
+‘United States’
+</li>
+<li>
+‘United Kingdom’
+</li>
+<li>
+‘Canada’
+</li>
+<li>
+‘Australia’
+</li>
+</ol>
+</section>
+<section id="analyse-des-métiers-les-plus-demandés" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="analyse-des-métiers-les-plus-demandés"><span class="header-section-number">1.4</span> Analyse des métiers les plus demandés</h2>
+<p>Cette analyse consiste à identifier les intitulés de postes apparaissant le plus fréquemment dans les offres d’emploi du dataset.</p>
+<p>Le comptage des intitulés de postes montre que le marché de l’emploi dans le domaine de la Data est dominé par des rôles techniques spécialisés, notamment des postes orientés Data Engineering, Machine Learning et Data Science.</p>
+<p>Parmi les intitulés les plus fréquents observés dans les résultats, on retrouve par exemple : - <strong>Senior Machine Learning Engineer</strong> - <strong>Principal Software Engineer (ML)</strong> - <strong>Senior ETL / Data Warehouse Specialist</strong> - <strong>Data Engineer</strong> - <strong>Data Scientist</strong></p>
+<p>Ces résultats indiquent une forte demande pour des profils expérimentés, principalement orientés vers le développement de solutions data complexes, l’ingénierie des données et le machine learning.</p>
+<p>Cette analyse constitue une première étape essentielle pour comprendre les besoins du marché, et servira de base aux analyses suivantes, notamment la répartition géographique des offres et l’étude des compétences associées à ces postes.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comptage des intitulés de postes</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>job_title_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(job_postings<span class="sc">$</span>job_title)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion en data.frame et tri décroissant</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>job_title_counts_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(job_title_counts)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(job_title_counts_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"job_title"</span>, <span class="st">"count"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>job_title_counts_df <span class="ot">&lt;-</span> job_title_counts_df[</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(<span class="sc">-</span>job_title_counts_df<span class="sc">$</span>count),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des 10 postes les plus fréquents</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(job_title_counts_df, <span class="dv">10</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<table>
+<thead>
+<tr>
+<th>
+</th>
+<th scope="col">
+job_title
+</th>
+<th scope="col">
+count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">
+4809
+</th>
+<td>
+Senior Data Engineer
+</td>
+<td>
+285
+</td>
+</tr>
+<tr>
+<th scope="row">
+4697
+</th>
+<td>
+Senior Data Analyst
+</td>
+<td>
+163
+</td>
+</tr>
+<tr>
+<th scope="row">
+1515
+</th>
+<td>
+Data Engineer
+</td>
+<td>
+149
+</td>
+</tr>
+<tr>
+<th scope="row">
+5270
+</th>
+<td>
+Senior MLOps Engineer
+</td>
+<td>
+138
+</td>
+</tr>
+<tr>
+<th scope="row">
+950
+</th>
+<td>
+Data Analyst
+</td>
+<td>
+137
+</td>
+</tr>
+<tr>
+<th scope="row">
+1964
+</th>
+<td>
+Data Scientist
+</td>
+<td>
+128
+</td>
+</tr>
+<tr>
+<th scope="row">
+3084
+</th>
+<td>
+Lead Data Engineer
+</td>
+<td>
+123
+</td>
+</tr>
+<tr>
+<th scope="row">
+4942
+</th>
+<td>
+Senior Data Scientist
+</td>
+<td>
+119
+</td>
+</tr>
+<tr>
+<th scope="row">
+1191
+</th>
+<td>
+Data Architect
+</td>
+<td>
+111
+</td>
+</tr>
+<tr>
+<th scope="row">
+6057
+</th>
+<td>
+Staff Machine Learning Engineer, Series A
+</td>
+<td>
+101
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="analyse-des-métiers-les-plus-demandés-1" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="analyse-des-métiers-les-plus-demandés-1"><span class="header-section-number">1.5</span> Analyse des métiers les plus demandés</h2>
+<p>Le comptage des intitulés de postes met en évidence une forte demande pour des profils orientés Data Engineering et Data Analysis, avec une dominance claire des postes de niveau senior.</p>
+<p>Les résultats montrent que les postes les plus fréquents sont : - <strong>Senior Data Engineer</strong> (285 offres) - <strong>Senior Data Analyst</strong> (163 offres) - <strong>Data Engineer</strong> (149 offres) - <strong>Senior MLOps Engineer</strong> (138 offres) - <strong>Data Analyst</strong> (137 offres) - <strong>Data Scientist</strong> (128 offres)</p>
+<p>On observe également une présence notable de rôles à responsabilité élevée tels que <strong>Lead Data Engineer</strong>, <strong>Senior Data Scientist</strong> et <strong>Data Architect</strong>, ce qui indique une maturité croissante des équipes data au sein des entreprises.</p>
+<p>Ces résultats confirment que le marché de l’emploi dans la Data privilégie majoritairement des profils expérimentés, capables de concevoir, déployer et maintenir des architectures data et des solutions analytiques avancées.</p>
+<p>Cette analyse constitue une base essentielle pour les étapes suivantes, notamment l’étude de la répartition géographique des offres et l’analyse des compétences associées à ces métiers.</p>
+</section>
+<section id="répartition-géographique-des-offres-demploi-par-pays" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="répartition-géographique-des-offres-demploi-par-pays"><span class="header-section-number">1.6</span> Répartition géographique des offres d’emploi (par pays)</h2>
+<p>Cette analyse vise à étudier la répartition des offres d’emploi par pays, afin d’identifier les zones géographiques les plus actives dans le domaine de la Data.</p>
+<p>L’étude du nombre d’offres par pays permet de : - Identifier les marchés les plus dynamiques - Mettre en évidence la concentration géographique des opportunités - Comparer l’attractivité relative des pays pour les métiers de la Data</p>
+<p>Les résultats obtenus fourniront une vision globale de la localisation des opportunités d’emploi dans le dataset.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comptage des offres par pays</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>country_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(job_postings<span class="sc">$</span>search_country)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion en data.frame et tri décroissant</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>country_counts_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(country_counts)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(country_counts_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"country"</span>, <span class="st">"count"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>country_counts_df <span class="ot">&lt;-</span> country_counts_df[</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(<span class="sc">-</span>country_counts_df<span class="sc">$</span>count),</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des pays les plus représentés</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(country_counts_df, <span class="dv">10</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<table>
+<thead>
+<tr>
+<th>
+</th>
+<th scope="col">
+country
+</th>
+<th scope="col">
+count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">
+4
+</th>
+<td>
+United States
+</td>
+<td>
+10291
+</td>
+</tr>
+<tr>
+<th scope="row">
+3
+</th>
+<td>
+United Kingdom
+</td>
+<td>
+995
+</td>
+</tr>
+<tr>
+<th scope="row">
+2
+</th>
+<td>
+Canada
+</td>
+<td>
+630
+</td>
+</tr>
+<tr>
+<th scope="row">
+1
+</th>
+<td>
+Australia
+</td>
+<td>
+301
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="répartition-géographique-des-offres-demploi-par-pays-1" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="répartition-géographique-des-offres-demploi-par-pays-1"><span class="header-section-number">1.7</span> Répartition géographique des offres d’emploi (par pays)</h2>
+<p>L’analyse de la répartition géographique des offres d’emploi met en évidence une forte concentration des opportunités dans quelques pays clés.</p>
+<p>Les résultats montrent que : - <strong>Les États-Unis</strong> dominent largement le marché avec <strong>10 291 offres</strong>, représentant la très grande majorité des opportunités du dataset. - <strong>Le Royaume-Uni</strong> arrive en deuxième position avec <strong>995 offres</strong>. - <strong>Le Canada</strong> suit avec <strong>630 offres</strong>. - <strong>L’Australie</strong> complète ce groupe avec <strong>301 offres</strong>.</p>
+<p>Cette distribution indique que le marché de l’emploi dans le domaine de la Data est fortement centré sur les pays anglophones, en particulier les États-Unis, qui apparaissent comme le principal pôle mondial pour les métiers liés à la Data.</p>
+<p>Ces résultats suggèrent également une forte attractivité de ces pays pour les profils data, tant en termes de volume d’offres que de maturité du marché. Cette analyse servira de base pour approfondir l’étude des types de postes et des conditions de travail proposées.</p>
+</section>
+<section id="répartition-des-offres-par-type-de-poste" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="répartition-des-offres-par-type-de-poste"><span class="header-section-number">1.8</span> Répartition des offres par type de poste</h2>
+<p>Cette analyse vise à étudier la répartition des offres d’emploi selon le type de poste proposé, à savoir : - Onsite - Hybrid - Remote</p>
+<p>L’objectif est de comprendre les modalités de travail les plus fréquemment proposées dans le domaine de la Data, et d’évaluer la place du travail à distance par rapport aux postes en présentiel.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comptage des offres par type de poste</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>job_type_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(job_postings<span class="sc">$</span>job_type)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion en data.frame et tri décroissant</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>job_type_counts_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(job_type_counts)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(job_type_counts_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"job_type"</span>, <span class="st">"count"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>job_type_counts_df <span class="ot">&lt;-</span> job_type_counts_df[</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(<span class="sc">-</span>job_type_counts_df<span class="sc">$</span>count),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des résultats</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>job_type_counts_df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<table>
+<thead>
+<tr>
+<th>
+</th>
+<th scope="col">
+job_type
+</th>
+<th scope="col">
+count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">
+2
+</th>
+<td>
+Onsite
+</td>
+<td>
+12188
+</td>
+</tr>
+<tr>
+<th scope="row">
+3
+</th>
+<td>
+Remote
+</td>
+<td>
+18
+</td>
+</tr>
+<tr>
+<th scope="row">
+1
+</th>
+<td>
+Hybrid
+</td>
+<td>
+11
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="analyse-et-interprétation-des-résultats-type-de-poste" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="analyse-et-interprétation-des-résultats-type-de-poste"><span class="header-section-number">1.9</span> Analyse et interprétation des résultats — Type de poste</h2>
+<p>Les résultats obtenus montrent une répartition très déséquilibrée des offres d’emploi selon le type de poste.</p>
+<p>La très grande majorité des offres sont des postes <strong>Onsite</strong>, avec <strong>12 188 annonces</strong>, ce qui indique que le travail en présentiel reste dominant dans le marché de l’emploi de la Data représenté par ce dataset.</p>
+<p>À l’inverse, les postes <strong>Remote</strong> (<strong>18 offres</strong>) et <strong>Hybrid</strong> (<strong>11 offres</strong>) sont extrêmement minoritaires. Cette faible représentation suggère que les modalités de travail à distance ne sont pas largement adoptées dans les offres collectées, ou qu’elles sont sous-représentées dans la source des données.</p>
+<p>Ces résultats peuvent être liés à plusieurs facteurs, tels que les politiques internes des entreprises, les contraintes liées à la sécurité des données ou la nature des postes proposés. Ils mettent en évidence une préférence marquée pour le travail en présentiel dans le marché étudié.</p>
+</section>
+<section id="répartition-des-offres-selon-le-niveau-des-postes" class="level2" data-number="1.10">
+<h2 data-number="1.10" class="anchored" data-anchor-id="répartition-des-offres-selon-le-niveau-des-postes"><span class="header-section-number">1.10</span> Répartition des offres selon le niveau des postes</h2>
+<p>Cette analyse vise à étudier la répartition des offres d’emploi selon le niveau des postes proposés.</p>
+<p>L’objectif est de comprendre quels niveaux d’expérience sont les plus recherchés sur le marché de l’emploi dans le domaine de la Data, et d’identifier si les offres sont principalement orientées vers des profils juniors, intermédiaires ou seniors.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comptage des offres par niveau de poste</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>job_level_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(job_postings<span class="sc">$</span>job_level)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion en data.frame et tri décroissant</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>job_level_counts_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(job_level_counts)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(job_level_counts_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"job_level"</span>, <span class="st">"count"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>job_level_counts_df <span class="ot">&lt;-</span> job_level_counts_df[</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(<span class="sc">-</span>job_level_counts_df<span class="sc">$</span>count),</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des résultats</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>job_level_counts_df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<table>
+<thead>
+<tr>
+<th>
+</th>
+<th scope="col">
+job_level
+</th>
+<th scope="col">
+count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">
+2
+</th>
+<td>
+Mid senior
+</td>
+<td>
+10919
+</td>
+</tr>
+<tr>
+<th scope="row">
+1
+</th>
+<td>
+Associate
+</td>
+<td>
+1298
+</td>
+</tr>
+</tbody>
+</table>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphique : répartition des niveaux de poste</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  job_level_counts_df<span class="sc">$</span>count,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">names.arg =</span> job_level_counts_df<span class="sc">$</span>job_level,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"orange"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Répartition des offres selon le niveau de poste"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Nombre d'offres"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">las =</span> <span class="dv">1</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_files/analysis_19_0.png" class="img-fluid figure-img"></p>
+<figcaption>png</figcaption>
+</figure>
+</div>
+</section>
+<section id="analyse-et-interprétation-des-résultats-niveau-des-postes" class="level2" data-number="1.11">
+<h2 data-number="1.11" class="anchored" data-anchor-id="analyse-et-interprétation-des-résultats-niveau-des-postes"><span class="header-section-number">1.11</span> Analyse et interprétation des résultats — Niveau des postes</h2>
+<p>L’analyse de la répartition des offres selon le niveau des postes montre une dominance très marquée des profils de niveau intermédiaire à senior.</p>
+<p>Les résultats indiquent que : - Les postes de niveau <strong>Mid senior</strong> représentent la grande majorité des offres avec <strong>10 919 annonces</strong>. - Les postes de niveau <strong>Associate</strong> sont nettement moins nombreux avec <strong>1 298 annonces</strong>.</p>
+<p>Cette distribution met en évidence que le marché de l’emploi dans le domaine de la Data étudié dans ce dataset est principalement orienté vers des profils ayant déjà une expérience significative.</p>
+<p>La faible proportion de postes de niveau Associate suggère que les opportunités pour les profils débutants ou en début de carrière sont plus limitées par rapport aux profils intermédiaires et expérimentés.</p>
+<p>Ces résultats confirment les observations précédentes concernant la forte demande pour des postes techniques avancés et renforcent l’idée d’un marché data mature, axé sur l’expertise et l’expérience.</p>
+</section>
+<section id="analyse-des-compétences-les-plus-demandées" class="level2" data-number="1.12">
+<h2 data-number="1.12" class="anchored" data-anchor-id="analyse-des-compétences-les-plus-demandées"><span class="header-section-number">1.12</span> Analyse des compétences les plus demandées</h2>
+<p>Cette étape vise à identifier les compétences techniques les plus fréquemment mentionnées dans les offres d’emploi.</p>
+<p>Le dataset des compétences contient, pour chaque offre, une liste de compétences sous forme de texte. L’analyse consiste à : - Séparer les compétences individuelles - Compter leur fréquence d’apparition - Identifier les compétences les plus demandées sur le marché de la Data</p>
+<p>Les résultats permettront de mettre en évidence les technologies, outils et compétences clés recherchés par les entreprises.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Séparation des compétences (séparées par des virgules)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>skills_vector <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">strsplit</span>(job_skills<span class="sc">$</span>job_skills, <span class="st">","</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Nettoyage des espaces</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>skills_vector <span class="ot">&lt;-</span> <span class="fu">trimws</span>(skills_vector)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppression des valeurs vides</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>skills_vector <span class="ot">&lt;-</span> skills_vector[skills_vector <span class="sc">!=</span> <span class="st">""</span>]</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Comptage des compétences</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>skill_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(skills_vector)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion en data.frame et tri décroissant</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>skill_counts_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(skill_counts)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(skill_counts_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"skill"</span>, <span class="st">"count"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>skill_counts_df <span class="ot">&lt;-</span> skill_counts_df[</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(<span class="sc">-</span>skill_counts_df<span class="sc">$</span>count),</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des 15 compétences les plus demandées</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(skill_counts_df, <span class="dv">15</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<table>
+<thead>
+<tr>
+<th>
+</th>
+<th scope="col">
+skill
+</th>
+<th scope="col">
+count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">
+57311
+</th>
+<td>
+Python
+</td>
+<td>
+4801
+</td>
+</tr>
+<tr>
+<th scope="row">
+65426
+</th>
+<td>
+SQL
+</td>
+<td>
+4606
+</td>
+</tr>
+<tr>
+<th scope="row">
+15256
+</th>
+<td>
+Communication
+</td>
+<td>
+2498
+</td>
+</tr>
+<tr>
+<th scope="row">
+19317
+</th>
+<td>
+Data Analysis
+</td>
+<td>
+2181
+</td>
+</tr>
+<tr>
+<th scope="row">
+43550
+</th>
+<td>
+Machine Learning
+</td>
+<td>
+1966
+</td>
+</tr>
+<tr>
+<th scope="row">
+7028
+</th>
+<td>
+AWS
+</td>
+<td>
+1740
+</td>
+</tr>
+<tr>
+<th scope="row">
+68560
+</th>
+<td>
+Tableau
+</td>
+<td>
+1685
+</td>
+</tr>
+<tr>
+<th scope="row">
+23155
+</th>
+<td>
+Data Visualization
+</td>
+<td>
+1562
+</td>
+</tr>
+<tr>
+<th scope="row">
+57949
+</th>
+<td>
+R
+</td>
+<td>
+1542
+</td>
+</tr>
+<tr>
+<th scope="row">
+40675
+</th>
+<td>
+Java
+</td>
+<td>
+1414
+</td>
+</tr>
+<tr>
+<th scope="row">
+65032
+</th>
+<td>
+Spark
+</td>
+<td>
+1392
+</td>
+</tr>
+<tr>
+<th scope="row">
+22477
+</th>
+<td>
+Data Science
+</td>
+<td>
+1285
+</td>
+</tr>
+<tr>
+<th scope="row">
+20434
+</th>
+<td>
+Data Engineering
+</td>
+<td>
+1262
+</td>
+</tr>
+<tr>
+<th scope="row">
+69092
+</th>
+<td>
+Teamwork
+</td>
+<td>
+1218
+</td>
+</tr>
+<tr>
+<th scope="row">
+56452
+</th>
+<td>
+Project Management
+</td>
+<td>
+1213
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="analyse-et-interprétation-des-résultats-compétences-les-plus-demandées" class="level2" data-number="1.13">
+<h2 data-number="1.13" class="anchored" data-anchor-id="analyse-et-interprétation-des-résultats-compétences-les-plus-demandées"><span class="header-section-number">1.13</span> Analyse et interprétation des résultats — Compétences les plus demandées</h2>
+<p>L’analyse des compétences met en évidence une forte domination des compétences techniques fondamentales, combinées à des compétences analytiques et transversales.</p>
+<p>Les résultats montrent que : - <strong>Python</strong> est la compétence la plus demandée avec <strong>4 801 occurrences</strong>, confirmant son rôle central dans les métiers de la Data. - <strong>SQL</strong> arrive en deuxième position avec <strong>4 606 occurrences</strong>, soulignant l’importance de la manipulation et de l’extraction des données. - Les compétences analytiques telles que <strong>Data Analysis</strong> (<strong>2 181</strong>) et <strong>Machine Learning</strong> (<strong>1 966</strong>) sont fortement représentées. - Les technologies liées aux plateformes et outils data comme <strong>AWS</strong>, <strong>Tableau</strong>, <strong>Spark</strong> et <strong>R</strong> apparaissent également parmi les compétences les plus recherchées. - Des compétences transversales telles que <strong>Communication</strong>, <strong>Teamwork</strong> et <strong>Project Management</strong> figurent dans le top des compétences, montrant que les entreprises valorisent aussi les capacités de collaboration et de gestion.</p>
+<p>Ces résultats indiquent que le marché de l’emploi dans la Data recherche des profils polyvalents, combinant des compétences techniques solides, une capacité d’analyse avancée et des compétences humaines essentielles pour le travail en équipe et la gestion de projets data complexes.</p>
+</section>
+<section id="analyse-croisée-des-compétences-par-métier" class="level2" data-number="1.14">
+<h2 data-number="1.14" class="anchored" data-anchor-id="analyse-croisée-des-compétences-par-métier"><span class="header-section-number">1.14</span> Analyse croisée des compétences par métier</h2>
+<p>Cette analyse vise à étudier les compétences les plus demandées en fonction des intitulés de postes.</p>
+<p>L’objectif est d’identifier : - Les compétences dominantes associées aux métiers les plus fréquents - Les différences de compétences selon le type de poste - Les compétences clés qui caractérisent certains rôles spécifiques (Data Engineer, Data Analyst, Data Scientist, etc.)</p>
+<p>Cette analyse permettra de mieux comprendre l’adéquation entre les métiers et les compétences techniques demandées par le marché.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création du dataset joint métier / compétences</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>jobs_skills_merged <span class="ot">&lt;-</span> <span class="fu">merge</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  job_postings[, <span class="fu">c</span>(<span class="st">"job_link"</span>, <span class="st">"job_title"</span>)],</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  job_skills,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"job_link"</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Top 5 métiers </span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>top_jobs <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">sort</span>(<span class="fu">table</span>(jobs_skills_merged<span class="sc">$</span>job_title), <span class="at">decreasing =</span> <span class="cn">TRUE</span>))[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Boucle sur chaque métier</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (job <span class="cf">in</span> top_jobs) {</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">==============================</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Métier :"</span>, job, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"==============================</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filtrage des compétences du métier</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  skills_text <span class="ot">&lt;-</span> jobs_skills_merged<span class="sc">$</span>job_skills[</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    jobs_skills_merged<span class="sc">$</span>job_title <span class="sc">==</span> job</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Séparation et nettoyage</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  skills_vector <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">strsplit</span>(skills_text, <span class="st">","</span>))</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  skills_vector <span class="ot">&lt;-</span> <span class="fu">trimws</span>(skills_vector)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  skills_vector <span class="ot">&lt;-</span> skills_vector[skills_vector <span class="sc">!=</span> <span class="st">""</span>]</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Comptage des compétences</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  skill_counts <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">table</span>(skills_vector), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Affichage Top 5 skills</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">head</span>(skill_counts, <span class="dv">5</span>))</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>==============================
+Métier : Senior Data Engineer 
+==============================
+skills_vector
+          Python              SQL Data Engineering            Spark 
+             236              190              135              119 
+            Java 
+             116 
+
+==============================
+Métier : Senior Data Analyst 
+==============================
+skills_vector
+               SQL             Python      Data Analysis            Tableau 
+               142                 97                 84                 79 
+Data Visualization 
+                71 
+
+==============================
+Métier : Data Engineer 
+==============================
+skills_vector
+          Python              SQL Data Engineering              AWS 
+              99               89               70               39 
+           Spark 
+              38 
+
+==============================
+Métier : Senior MLOps Engineer 
+==============================
+skills_vector
+  Probabilistic Graphs Reinforcement Learning                    NLP 
+                   124                    123                    114 
+           Flexibility                   LLMs 
+                   113                    113 
+
+==============================
+Métier : Data Analyst 
+==============================
+skills_vector
+               SQL      Data Analysis Data Visualization            Tableau 
+                89                 85                 56                 50 
+            Python 
+                45 </code></pre>
+</section>
+<section id="analyse-croisée-des-compétences-par-métier-1" class="level2" data-number="1.15">
+<h2 data-number="1.15" class="anchored" data-anchor-id="analyse-croisée-des-compétences-par-métier-1"><span class="header-section-number">1.15</span> Analyse croisée des compétences par métier</h2>
+<p>L’analyse croisée des compétences par métier met en évidence des différences claires entre les profils recherchés selon l’intitulé du poste, tout en confirmant l’importance de certaines compétences communes.</p>
+<p>Pour le poste de <strong>Senior Data Engineer</strong>, les compétences les plus demandées sont principalement orientées vers l’ingénierie des données et les technologies big data, avec une forte dominance de <strong>Python</strong>, <strong>SQL</strong>, <strong>Data Engineering</strong> et <strong>Spark</strong>, ainsi qu’une présence notable de <strong>Java</strong>. Cela reflète le rôle central de ce métier dans la conception et la gestion des pipelines data à grande échelle.</p>
+<p>Le poste de <strong>Senior Data Analyst</strong> met davantage l’accent sur l’analyse et la visualisation des données. Les compétences dominantes sont <strong>SQL</strong>, <strong>Python</strong>, <strong>Data Analysis</strong>, <strong>Tableau</strong> et <strong>Data Visualization</strong>, ce qui correspond aux missions d’exploration, d’interprétation et de restitution des données.</p>
+<p>Pour le métier de <strong>Data Engineer</strong>, on observe également une forte présence de <strong>Python</strong> et <strong>SQL</strong>, accompagnée de compétences liées aux plateformes cloud telles que <strong>AWS</strong>, confirmant l’importance des environnements cloud dans les architectures data modernes.</p>
+<p>De manière générale, cette analyse montre que : - <strong>Python</strong> et <strong>SQL</strong> sont des compétences transversales essentielles, présentes dans tous les métiers analysés. - Les postes orientés ingénierie privilégient les technologies big data et cloud (Spark, AWS, Data Engineering). - Les postes orientés analyse privilégient les outils d’analyse et de visualisation (Tableau, Data Visualization).</p>
+<p>Ces résultats illustrent clairement la spécialisation des compétences selon les métiers, tout en mettant en évidence un socle commun de compétences techniques indispensables dans le domaine de la Data.</p>
+</section>
+<section id="visualisation-des-résultats" class="level2" data-number="1.16">
+<h2 data-number="1.16" class="anchored" data-anchor-id="visualisation-des-résultats"><span class="header-section-number">1.16</span> Visualisation des résultats</h2>
+<p>Afin de faciliter l’interprétation des résultats, des graphiques simples sont utilisés pour représenter visuellement les principales tendances observées dans les données.</p>
+<p>Les visualisations permettent de : - Comparer rapidement les catégories - Identifier les dominances et déséquilibres - Appuyer les analyses quantitatives par des représentations graphiques</p>
+<p>Les graphiques suivants illustrent les métiers les plus demandés et la répartition géographique des offres.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- Graph 1 : Top 10 métiers les plus demandés ----------</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>top_jobs <span class="ot">&lt;-</span> job_title_counts_df[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, ]</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  top_jobs<span class="sc">$</span>count,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">names.arg =</span> top_jobs<span class="sc">$</span>job_title,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">las =</span> <span class="dv">2</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Top 10 des métiers les plus demandés"</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Nombre d'offres"</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- Graph 2 : Répartition des offres par pays ----------</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  country_counts_df<span class="sc">$</span>count,</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">names.arg =</span> country_counts_df<span class="sc">$</span>country,</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"darkgreen"</span>,</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Répartition des offres par pays"</span>,</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Nombre d'offres"</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_files/analysis_28_0.png" class="img-fluid figure-img"></p>
+<figcaption>png</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_files/analysis_28_1.png" class="img-fluid figure-img"></p>
+<figcaption>png</figcaption>
+</figure>
+</div>
+</section>
+<section id="synthèse-chiffrée-du-marché-key-insights" class="level2" data-number="1.17">
+<h2 data-number="1.17" class="anchored" data-anchor-id="synthèse-chiffrée-du-marché-key-insights"><span class="header-section-number">1.17</span> Synthèse chiffrée du marché (Key Insights)</h2>
+<p>Cette section présente une synthèse quantitative des principaux résultats afin de résumer rapidement les tendances observées dans le marché de l’emploi Data analysé.</p>
+<p>Les indicateurs clés permettent de : - Donner une vue d’ensemble rapide du dataset - Appuyer les analyses précédentes par des chiffres synthétiques - Faciliter la lecture pour un rapport ou une soutenance</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Indicateurs clés du dataset</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Nombre total d'offres</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>total_jobs <span class="ot">&lt;-</span> <span class="fu">nrow</span>(job_postings)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Nombre de pays uniques</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>total_countries <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(job_postings<span class="sc">$</span>search_country))</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Nombre de métiers uniques</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>total_job_titles <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(job_postings<span class="sc">$</span>job_title))</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Nombre total de compétences uniques</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>total_unique_skills <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(skills_vector))</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Pourcentage de postes Mid senior</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>pct_mid_senior <span class="ot">&lt;-</span> <span class="fu">round</span>(</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(job_postings<span class="sc">$</span>job_level <span class="sc">==</span> <span class="st">"Mid senior"</span>) <span class="sc">/</span> total_jobs <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des indicateurs</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Nombre total d'offres :"</span>, total_jobs, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Nombre de pays :"</span>, total_countries, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Nombre de métiers uniques :"</span>, total_job_titles, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Nombre de compétences uniques :"</span>, total_unique_skills, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Pourcentage de postes Mid senior :"</span>, pct_mid_senior, <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>Nombre total d'offres : 12217 
+Nombre de pays : 4 
+Nombre de métiers uniques : 6484 
+Nombre de compétences uniques : 1252 
+Pourcentage de postes Mid senior : 89.4 %</code></pre>
+</section>
+<section id="interprétation-de-la-synthèse-chiffrée" class="level2" data-number="1.18">
+<h2 data-number="1.18" class="anchored" data-anchor-id="interprétation-de-la-synthèse-chiffrée"><span class="header-section-number">1.18</span> Interprétation de la synthèse chiffrée</h2>
+<p>La synthèse chiffrée met en évidence plusieurs caractéristiques importantes du marché de l’emploi dans le domaine de la Data analysé dans ce projet.</p>
+<p>Le dataset contient <strong>12 217 offres d’emploi</strong>, ce qui constitue un volume significatif permettant d’obtenir des résultats représentatifs des tendances du marché. Ces offres sont réparties sur <strong>4 pays</strong>, indiquant une forte concentration géographique des opportunités, principalement dans des pays anglophones.</p>
+<p>On observe une grande diversité des intitulés de postes, avec <strong>6 484 métiers uniques</strong>, ce qui reflète la variété des rôles, des spécialisations et des appellations utilisées par les entreprises dans le domaine de la Data.</p>
+<p>Le nombre élevé de <strong>1 252 compétences uniques</strong> souligne la richesse et la complexité des profils recherchés, combinant des compétences techniques, analytiques et transversales.</p>
+<p>Enfin, la proportion très élevée de postes de niveau <strong>Mid senior (89,4 %)</strong> montre que le marché de l’emploi étudié est majoritairement orienté vers des profils expérimentés. Les opportunités pour les profils débutants apparaissent plus limitées, ce qui confirme la forte exigence en termes d’expérience dans les métiers de la Data.</p>
+<p>Cette synthèse globale renforce les analyses précédentes et met en évidence un marché mature, spécialisé et fortement axé sur l’expertise.</p>
+</section>
+<section id="conclusion-générale" class="level2" data-number="1.19">
+<h2 data-number="1.19" class="anchored" data-anchor-id="conclusion-générale"><span class="header-section-number">1.19</span> Conclusion générale</h2>
+<p>Ce projet avait pour objectif d’analyser le marché de l’emploi dans le domaine de la Data à partir d’un ensemble d’offres d’emploi réelles, en mettant l’accent sur les métiers, la localisation géographique, les compétences demandées et les niveaux d’expérience requis.</p>
+<p>L’analyse a montré que le marché est fortement dominé par des postes techniques orientés vers l’ingénierie des données et l’analyse, avec une demande particulièrement élevée pour des rôles tels que <strong>Senior Data Engineer</strong>, <strong>Senior Data Analyst</strong> et <strong>Data Engineer</strong>. La répartition géographique met en évidence une concentration très marquée des offres dans un nombre limité de pays, principalement les États-Unis, confirmant leur rôle central dans l’écosystème Data.</p>
+<p>L’étude des compétences révèle que <strong>Python</strong> et <strong>SQL</strong> constituent le socle technique indispensable pour la majorité des métiers de la Data, tandis que des compétences complémentaires telles que le cloud (AWS), les outils de visualisation (Tableau) et les technologies big data (Spark) jouent un rôle clé selon le type de poste. Les compétences transversales, notamment la communication et le travail en équipe, apparaissent également comme des éléments importants dans les profils recherchés.</p>
+<p>Un résultat marquant de ce projet est la très forte proportion de postes de niveau <strong>Mid senior</strong>, indiquant que le marché de l’emploi Data étudié est principalement orienté vers des profils expérimentés. Les opportunités pour les profils juniors semblent plus limitées, ce qui souligne l’importance de l’expérience pratique et de la spécialisation technique.</p>
+<p>Dans l’ensemble, cette analyse met en évidence un marché de l’emploi Data mature, exigeant et fortement spécialisé. Les résultats obtenus peuvent servir de base à une meilleure compréhension des attentes du marché, aussi bien pour les étudiants et professionnels souhaitant orienter leur carrière que pour les entreprises cherchant à positionner leurs besoins en compétences.</p>
+</section>
+<section id="limites-du-projet-et-perspectives-damélioration" class="level2" data-number="1.20">
+<h2 data-number="1.20" class="anchored" data-anchor-id="limites-du-projet-et-perspectives-damélioration"><span class="header-section-number">1.20</span> Limites du projet et perspectives d’amélioration</h2>
+<p>Bien que ce projet fournisse une analyse détaillée et pertinente du marché de l’emploi dans le domaine de la Data, certaines limites doivent être prises en compte dans l’interprétation des résultats.</p>
+<p>Tout d’abord, les données utilisées proviennent principalement d’offres d’emploi publiées sur LinkedIn, ce qui peut introduire un biais de sélection. Le dataset peut ne pas représenter l’ensemble du marché de l’emploi Data, notamment les offres issues de petites entreprises, de startups locales ou d’autres plateformes de recrutement.</p>
+<p>Ensuite, la répartition géographique des offres est fortement concentrée sur un nombre limité de pays, principalement anglophones. Cette concentration peut limiter la généralisation des résultats à d’autres régions du monde où les dynamiques du marché de l’emploi Data peuvent être différentes.</p>
+<p>Par ailleurs, l’analyse des compétences repose sur des listes de compétences textuelles extraites des offres d’emploi, sans traitement avancé du langage naturel. Certaines compétences peuvent être redondantes, formulées de manière différente ou regroupées de façon approximative.</p>
+<p>Enfin, l’analyse ne prend pas en compte l’évolution temporelle des offres ni les informations salariales, ce qui aurait permis d’étudier les tendances dans le temps et la relation entre compétences, métiers et niveaux de rémunération.</p>
+<section id="perspectives-damélioration" class="level3" data-number="1.20.1">
+<h3 data-number="1.20.1" class="anchored" data-anchor-id="perspectives-damélioration"><span class="header-section-number">1.20.1</span> Perspectives d’amélioration</h3>
+<p>Plusieurs pistes d’amélioration peuvent être envisagées pour enrichir ce projet : - Intégrer une analyse temporelle afin d’étudier l’évolution des métiers et des compétences dans le temps. - Mettre en place des techniques de traitement du langage naturel (NLP) pour analyser plus finement les descriptions de postes et regrouper les compétences de manière plus précise. - Étendre l’analyse aux salaires afin d’évaluer l’impact des compétences et des métiers sur les niveaux de rémunération. - Réaliser une segmentation plus avancée du marché à l’aide de méthodes de clustering pour identifier différents profils de métiers Data.</p>
+<p>Ces améliorations permettraient d’approfondir l’analyse et d’obtenir une vision encore plus complète et nuancée du marché de l’emploi dans le domaine de la Data.</p>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
